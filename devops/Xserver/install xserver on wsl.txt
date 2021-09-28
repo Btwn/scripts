@@ -3,14 +3,15 @@ informacion https://stackoverflow.com/questions/61110603/how-to-set-up-working-x
 1	Descargar Xming https://sourceforge.net/projects/xming/
 2	Correr el launcher y activar "No Access Control" en el apartado de "Specify parameter setting" o correr el comando:
 	-	Xming :0 -multiwindow -clipboard -ac
-3	Add the following to your ~/.bashrc:
+3	Permitir o añadir reglas en el firmware privadas y quiza tambien publicas
+4	Add the following to your ~/.bashrc:
 	export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
 	export LIBGL_ALWAYS_INDIRECT=1
-4	Instalar en la distro linux alguna aplicacion
+5	Instalar en la distro linux alguna aplicacion
 	-	apt update
 	-	apt install x11-apps
-5	Correr una aplicacion
+6	Correr una aplicacion
 	-	xcalc
 
 Opcional
-6	Instalar wine https://wiki.winehq.org/Ubuntu
+7	Instalar wine https://wiki.winehq.org/Ubuntu
