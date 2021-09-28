@@ -1,0 +1,33 @@
+informacion de: https://adamtheautomator.com/openssh-windows/
+
+
+1	Descargar OpenSSH
+2	Descomprimir binarios en C:\Program Files\OpenSSH
+3	Añadir el directorio anterior en el PATH
+	Opcional comandos el powershell
+	-	Expand-Archive -Path .\OpenSSH-Win64.zip -DestinationPath ($env:temp) -Force
+	-	Get-ChildItem -Path "C:\Program Files\OpenSSH\" | Unblock-File
+4	Correr el archivo "install-sshd.ps1" en powershell
+5	Correr los siguientes comandos para levantar el servicio
+	-	## changes the sshd service's startup type from manual to automatic.
+	-	Set-Service sshd -StartupType Automatic
+	-	## starts the sshd service.
+	-	Start-Service sshd
+6	Añadir la siguinnte regla en el Firewall
+	-	New-NetFirewallRule -Name sshd -DisplayName 'Allow SSH' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+
+7	Conectar por el lado del cliente
+	-	ssh june@40.117.77.227
+
+8	Cambiar en el servidor el shell default para que sea powershell
+	-	New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force
+
+
+9	Crear la llave publica en el servidor
+	-	New-Item -Type File -Path C:\ProgramData\ssh\administrators_authorized_keys
+	-	get-acl C:\ProgramData\ssh\ssh_host_dsa_key | set-acl C:\ProgramData\ssh\administrators_authorized_keys
+
+	-	# Read the public key
+	-	$public_key = Get-Content C:\Users\cadiaz\.ssh\id_rsa.pub
+	-	# Append the public key to the administrators_authorized_keys on the server using ssh.
+	-	ssh june@40.177.77.227 "'$($public_key)' | Out-File C:\ProgramData\ssh\administrators_authorized_keys -Encoding UTF8 -Append"
