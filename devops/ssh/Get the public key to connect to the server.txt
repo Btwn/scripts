@@ -1,0 +1,6 @@
+Cuando el servidor ya tenga generada la llave
+es correr este comando en el cliente para traerse la llave publica y poder conectarse
+
+cat ~/.ssh/id_rsa.pub | ssh carlos@172.16.202.208 "cat >> ~/.ssh/authorized_keys"
+
+
