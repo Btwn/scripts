@@ -1,0 +1,2 @@
+Eliminar todos los contenedores con estatus stop
+docker rm -v $(docker ps -aq -f status=exited)
