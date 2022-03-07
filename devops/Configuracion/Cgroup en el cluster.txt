@@ -1,0 +1,24 @@
+https://stackoverflow.com/questions/52119985/kubeadm-init-shows-kubelet-isnt-running-or-healthy
+
+
+systemd
+
+
+I had this same issue when trying to initialize my k8s cluster. In my case, the error was rooting from Docker and Kubelet having inconsistent cgroups.
+
+To solve it, first find Docker cgroup:
+
+docker info | grep Cgroup
+
+The result of the above command would be something like this:
+
+Cgroup Driver: cgroupfs
+Cgroup Version: 1
+Then, update kubelet args (KUBELET_KUBECONFIG_ARGS) in /etc/systemd/system/kubelet.service.d/10-kubeadm.conf and add a --cgroup-driver flag corresponsing to docker cgroup (in this case cgroupfs).
+
+My config file looks like this after the modification:
+
+...
+Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/e`tc/kubernetes/kubelet.conf --cgroup-driver=cgroupfs"
+...
+Finally, run kubeadm reset and then kubeadm init.
