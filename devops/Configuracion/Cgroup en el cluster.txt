@@ -1,3 +1,8 @@
+https://www.techrepublic.com/article/how-to-quickly-install-kubernetes-on-ubuntu/
+
+http://vijayshinva.github.io/kubernetes/2018/07/28/setting-up-a-kubernetes-cluster-on-a-windows-laptop-using-hyper-v.html
+
+
 https://stackoverflow.com/questions/52119985/kubeadm-init-shows-kubelet-isnt-running-or-healthy
 
 
@@ -22,3 +27,37 @@ My config file looks like this after the modification:
 Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/e`tc/kubernetes/kubelet.conf --cgroup-driver=cgroupfs"
 ...
 Finally, run kubeadm reset and then kubeadm init.
+
+
+
+
+# First diasbale swap
+sudo swapoff -a
+
+# And then to disable swap on startup in /etc/fstab
+sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+
+
+
+/etc/kubernetes/manifests
+
+
+net use e: \\CA214150\repos
+
+
+https://github.com/justmeandopensource/kubernetes/blob/master/docs/install-cluster-ubuntu-20.md
+
+
+Solucion a dns pending
+https://www.weave.works/docs/net/latest/kubernetes/kube-addon/
+kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+
+
+kubeadm join 172.16.202.61:6443 --token wj57e0.p16drpz5h68ygg8f --discovery-token-ca-cert-hash sha256:0b66f718c6590d05ad834b0118071569c0873b057cbda11390c16d9924acdc7e
+
+
+kubectl create -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml
+
+kubectl create -f https://projectcalico.docs.tigera.io/manifests/custom-resources.yaml
+
+kubectl taint nodes --all node-role.kubernetes.io/master-

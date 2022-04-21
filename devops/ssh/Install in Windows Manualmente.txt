@@ -1,5 +1,5 @@
 informacion de: https://adamtheautomator.com/openssh-windows/
-
+net use e: \\CA214150\repos
 
 1	Descargar OpenSSH
 2	Descomprimir binarios en C:\Program Files\OpenSSH
