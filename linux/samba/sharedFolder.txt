@@ -1,0 +1,20 @@
+sudo apt install samba
+sudo smbpasswd -a AQUÍ_EL_NOMBRE_USUARIO
+
+
+
+mkdir prueba
+chmod 777 .Prueba
+
+sudo nano /etc/samba/smb.conf
+
+[Carpeta compartida a todos]
+path = /home/prueba
+browsable = yes
+read only = no
+create mask = 0777
+directory mask = 0777
+guest ok = yes
+writeable = yes
+
+sudo systemctl restart smbd
