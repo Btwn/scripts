@@ -53,7 +53,10 @@ https://www.weave.works/docs/net/latest/kubernetes/kube-addon/
 kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
 
 
-kubeadm join 172.16.202.61:6443 --token wj57e0.p16drpz5h68ygg8f --discovery-token-ca-cert-hash sha256:0b66f718c6590d05ad834b0118071569c0873b057cbda11390c16d9924acdc7e
+-- obtener el string de coneccion al cluster
+kubeadm token create --print-join-command
+
+sudo kubeadm join 172.16.202.61:6443 --token z5ku06.zt3jwjfzoqgdq69i --discovery-token-ca-cert-hash sha256:c5d4617cd75e46f2dfe7727babc87342a5e29235f6d90c65cd4952ae2a6c5cc7
 
 
 kubectl create -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml
@@ -61,3 +64,8 @@ kubectl create -f https://projectcalico.docs.tigera.io/manifests/tigera-operator
 kubectl create -f https://projectcalico.docs.tigera.io/manifests/custom-resources.yaml
 
 kubectl taint nodes --all node-role.kubernetes.io/master-
+
+
+
+---- darle todo el espacio libre a una particion en linux ubuntu
+sudo lvextend -rl +100%FREE /dev/mapper/ubuntu--vg-ubuntu--lv
