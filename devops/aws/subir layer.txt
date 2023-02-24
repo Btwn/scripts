@@ -1,0 +1,43 @@
+https://www.gcptutorials.com/article/how-to-use-requests-module-in-aws-lambda
+
+Step 1: Create Python Virtual Environment
+python3 -m venv test_venv
+
+
+Step 2: Activate Virtual Environment
+# [On Ubuntu]
+source test_venv/bin/activate
+
+# [On Windows]
+.\test_venv\Scripts\activate
+
+
+Step 3: Check Python Version
+python --version  
+
+
+Step 4: Create directory with name python
+mkdir python
+
+
+Step 5: Install requests package in python directory created in Step 4
+pip install requests -t python
+
+
+Step 6: Zip python directory
+# [On Ubuntu]
+zip -r requests.zip python
+
+# [On Windows]
+powershell Compress-Archive python requests.zip
+
+
+Step 7: Login to AWS account and Navigate to AWS Lambda Service.
+Step 8: In AWS Lambda select Layers from Additional resources.
+Step 9: Click on create layer, enter the required information.
+	Name: requests_layer
+	Description: Lambda layer for requests module
+	Select Upload a .zip file, click on upload and choose requests.zip created in Step 6
+	Compatible runtimes - Choose run time as per the python version from output of Step 3
+
+
