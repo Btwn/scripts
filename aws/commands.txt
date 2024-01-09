@@ -1,0 +1,6 @@
+
+# copy all content of a bucket
+aws s3 cp s3://resumen-factura-frontend resumen --recursive
+aws s3 cp s3://{URI} {Local folder} --recursive
+# uploal
+aws s3 cp {Local folder} s3://{URI} --recursive
