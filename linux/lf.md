@@ -9,5 +9,3 @@ cp lf /usr/bin
 rm lf
 rm lf-linux-amd64.tar.gz
 ```
-
-
