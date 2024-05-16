@@ -1,0 +1,169 @@
+
+# Checar que zona horaria tiene actualmente
+sudo timedatectl
+
+# Checar las zonas horarias filtradas para Mexico
+sudo timedatectl list-timezones | grep Mexico
+
+# Configurar la zona horaria
+sudo timedatectl set-timezones America/Mexico_City 
+
+
+
+
+
+
+# Configuracion del firewall, puertos requeridos
+sudo ufw enable
+sudo ufw status
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw allow ssh
+sudo ufw allow 8080
+sudo ufw allow 8082
+sudo ufw allow 9090
+sudo ufw allow 9100
+
+# importacion del CA, y del key y crt del sitio
+sudo mkdir -p /etc/gitlab/ssl
+sudo chmod 755 /etc/gitlab/ssl
+
+# copiar el certificado CA y los dos de la aplicacion (crt y key)
+# en la ruta /etc/gitlab/ssl
+
+
+# Configuracion en el archivo gitlab.rb /etc/gitlab/gitlab.rb
+letsencrypt['enable'] = false
+nginx['enable'] = true
+nginx['client_max_body_size'] = '250m'
+nginx['redirect_http_to_https'] = true
+nginx['redirect_http_to_https_port'] = 80
+nginx['ssl_client_certificate'] = "/etc/gitlab/ssl/myCA.crt"
+nginx['ssl_certificate'] = "/etc/gitlab/ssl/gitlab.grupomavi.com.crt"
+nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/gitlab.grupomavi.com.key"
+
+
+sudo gitlab-ctl reconfigure
+
+
+
+SB16N
+
+
+
+
+
+
+
+1 hacer un snapshot de la maquina virtual
+
+2 actualizar el apt
+sudo apt update
+
+3 ver la versión actual
+sudo gitlab-rake gitlab:env:info
+
+4 checar las versiones disponibles
+sudo apt-cache madison gitlab-ce
+
+5 instalar la siguiente version de minor en minor hacia arriba( major.minor.fix ), solo versiones estables
+sudo apt install gitlab-ce=16.5.7-ce.0
+sudo apt install gitlab-ce=16.6.5-ce.0
+sudo apt install gitlab-ce=16.7.3-ce.0
+
+
+sudo apt install gitlab-ce=16.7.4-ce.0
+
+ gitlab-ce | 16.7.2-ce.0
+ gitlab-ce | 16.7.0-ce.0
+ gitlab-ce | 16.6.4-ce.0
+ gitlab-ce | 16.6.2-ce.0
+ gitlab-ce | 16.6.1-ce.0
+ gitlab-ce | 16.6.0-ce.0
+ gitlab-ce | 16.5.6-ce.0
+ gitlab-ce | 16.5.4-ce.0
+ gitlab-ce | 16.5.3-ce.0
+ gitlab-ce | 16.5.2-ce.0
+ gitlab-ce | 16.5.1-ce.0
+ gitlab-ce | 16.5.0-ce.0
+ gitlab-ce | 16.4.5-ce.0
+ gitlab-ce | 16.4.4-ce.0
+ gitlab-ce | 16.4.3-ce.0
+ gitlab-ce | 16.4.2-ce.0
+
+
+/etc/gitlab/config_backup/gitlab_config_1705102605_2024_01_12.tar
+/etc/gitlab/config_backup/gitlab_config_1705104124_2024_01_12.tar
+
+
+
+
+
+
+### Correo
+# documentacion
+# https://docs.gitlab.com/omnibus/settings/smtp.html
+
+# Configurar el secreto para usuario y password
+sudo gitlab-rake gitlab:smtp:secret:edit EDITOR=vim
+
+# si quiero ver la configuracion guardada
+sudo gitlab-rake gitlab:smtp:secret:show
+
+# editar en el archivo /etc/gitlab/gitlab.rc
+gitlab_rails['smtp_enable'] = true
+gitlab_rails['smtp_address'] = "mail.mavi.mx"
+gitlab_rails['smtp_port'] = 26
+# no van porque esta en un secret de gitlab-rake
+# gitlab_rails['smtp_user_name'] = "user@mavi.mx"
+# gitlab_rails['smtp_password'] = "password"
+gitlab_rails['smtp_domain'] = "mail.mavi.xm"
+gitlab_rails['smtp_authentication'] = "login"
+gitlab_rails['smtp_enable_starttls_auto'] = true
+gitlab_rails['smtp_tls'] = false
+gitlab_rails['smtp_openssl_verify_mode'] = 'peer'
+
+gitlab_rails['gitlab_email_from'] = 'rep.gitlab@mavi.mx'
+gitlab_rails['gitlab_email_display_name'] = 'Gitlab'
+gitlab_rails['gitlab_email_reply_to'] = 'noreply@mavi.mx'
+
+
+# testear el correo
+sudo gitlab-rails console
+Notify.test_email('ca.diaz@mavi.mx', 'Message Subject', 'Message Body').deliver_now
+
+
+
+
+
+
+
+
+
+pages
+pages_external_url "https://docs.mavi.fun"
+gitlab_pages['listen_proxy'] = "localhost:8090"
+
+pages_nginx['redirect_http_to_https'] = true
+pages_nginx['ssl_certificate'] = "/etc/gitlab/ssl/wildcard.docs.mavi.fun.crt"
+pages_nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/wildcard.docs.mavi.fun.key"
+
+pages_nginx['enable'] = true
+
+
+
+
+# registry
+registry_external_url 'https://registry.mavi.fun'
+registry_nginx['ssl_certificate'] = "/etc/gitlab/ssl/registry.mavi.fun.crt"
+registry_nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/registry.mavi.fun.key"
+registry_nginx['redirect_http_to_https'] = true
+
+
+
+### hooks
+gitaly['configuration'] = {
+  hooks: {
+     custom_hooks_dir: '/var/opt/gitlab/gitaly/custom_hooks',
+   }
+}

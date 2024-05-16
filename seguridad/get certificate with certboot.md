@@ -12,6 +12,10 @@ sudo cp local-ca.crt /usr/local/share/ca-certificates
 sudo update-ca-certificates
 ```
 
-```javascript
 
+
+## use a certificate request
+
+```bash
+certbot certonly --manual --preferred-challenges dns --csr path.csr -d "*.DOMAIN"
 ```
