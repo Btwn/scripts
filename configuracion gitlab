@@ -66,6 +66,12 @@ sudo gitlab-rake gitlab:env:info
 4 checar las versiones disponibles
 sudo apt-cache madison gitlab-ce
 
+-- reestablecet la actualizacion
+ curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | sudo bash
+sudo apt install gitlab-ce=16.5.7-ce.0
+
+
+
 5 instalar la siguiente version de minor en minor hacia arriba( major.minor.fix ), solo versiones estables
 sudo apt install gitlab-ce=16.5.7-ce.0
 sudo apt install gitlab-ce=16.6.5-ce.0
@@ -94,6 +100,9 @@ sudo apt install gitlab-ce=16.7.4-ce.0
 
 /etc/gitlab/config_backup/gitlab_config_1705102605_2024_01_12.tar
 /etc/gitlab/config_backup/gitlab_config_1705104124_2024_01_12.tar
+
+sudo apt-get install gitlab-ce=16.7.7-ce.0
+sudo apt-get install gitlab-ce=16.11.2-ce.0
 
 
 
