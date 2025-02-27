@@ -24,7 +24,7 @@ Then, update kubelet args (KUBELET_KUBECONFIG_ARGS) in /etc/systemd/system/kubel
 My config file looks like this after the modification:
 
 ...
-Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/e`tc/kubernetes/kubelet.conf --cgroup-driver=cgroupfs"
+Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --cgroup-driver=cgroupfs"
 ...
 Finally, run kubeadm reset and then kubeadm init.
 
@@ -113,7 +113,9 @@ nameserver 8.8.8.8
 
 ********************************** add node
 sudo kubeadm token generate
-kubeadm token create jmbnyx.iosdwdfzdit3jq7r --print-join-command
+kubeadm token create 8j2995.hdj8ktvg52sytu3s --print-join-command
+
+kubeadm join 172.16.214.235:6443 --token 8j2995.hdj8ktvg52sytu3s --discovery-token-ca-cert-hash sha256:02c0c8743964dbd6b9b38690c5617b44cc434d07d294b3f07d5411b945d1312c
 
 
 cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
@@ -147,3 +149,74 @@ sudo ln -s /etc/resolv.conf /run/systemd/resolve/resolv.conf
 
 
 
+
+-------
+cri-o Debian
+https://cri-o.io/
+
+
+KUBERNETES_VERSION=v1.31
+CRIO_VERSION=v1.31
+apt-get update
+apt-get install -y software-properties-common curl
+
+curl -fsSL https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/deb/Release.key |
+    gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/deb/ /" |
+    tee /etc/apt/sources.list.d/kubernetes.list 
+
+curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/deb/Release.key |
+    gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+
+echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/deb/ /" |
+    tee /etc/apt/sources.list.d/cri-o.list
+
+apt-get update
+apt-get install -y cri-o kubelet kubeadm kubectl 
+
+systemctl start crio.service
+
+swapoff -a
+modprobe br_netfilter
+sysctl -w net.ipv4.ip_forward=1
+
+kubeadm init
+
+# modificar 
+/etc/fstab
+  comentar la linea que diga swap (free -h)
+
+/etc/modules -> añadir la siguiente linea
+  br_netfilter
+
+/etc/sysctl.d/k8s.conf
+  descomentar  la parte de net.ipv4.ip_forward = 1
+
+
+
+
+-----------
+kube-system
+- cni cilium, hubble y Cilium Tetragon
+- metrics
+- metallb
+
+ingress
+- nginx ingress
+- certmanager y external-dns
+
+monitoring
+- prometheus y graphana
+
+persistence
+- longhorn
+
+devops
+- flux
+- harbor
+- keycloak
+- mattermost
+- minio
+- nextcloud
+- vault

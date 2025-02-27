@@ -27,7 +27,7 @@ sudo apt-cache madison kubeadm
 sudo kubeadm upgrade plan
 
 sudo apt-mark unhold kubeadm
-sudo apt-get install -y kubeadm='1.31.0-*'
+sudo apt-get install -y kubeadm='1.31.1-*'
 sudo apt-mark hold kubeadm
 
 # MASTER
@@ -41,7 +41,7 @@ sudo kubeadm upgrade node
 
 ```bash
 sudo apt-mark unhold kubelet kubectl
-sudo apt-get install -y kubelet='1.31.0-*' kubectl='1.31.0-*'
+sudo apt-get install -y kubelet='1.31.1-*' kubectl='1.31.1-*'
 sudo apt-mark hold kubelet kubectl
 
 sudo systemctl daemon-reload
@@ -55,3 +55,6 @@ kubectl version
 kubeadm version
 kubelet --version
 ```
+
+
+kubectl run postgresql-client --rm --tty -i --restart='Never' --namespace openproject --image docker.io/bitnami/postgresql:16.4.0-debian-12-r11 --env="PGPASSWORD=Abc123**" --command -- psql --host postgresql -U openproject -d openproject -p 5432
